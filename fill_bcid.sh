@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -ex
 
 function decode_image() {
 	uudecode -o $1 << 'ENDOFFILE'
@@ -30561,7 +30562,7 @@ if [ $# -gt 8 -o $# -eq 0 ]; then
 	exit
 fi
 
-decode_image $template_file
+decode_image "${template_file}"
 
 x_coord=(400 1650)
 y_coord=(803 1653 2510 3365)
@@ -30577,7 +30578,7 @@ done
 j=0
 for bcid in "$@"
 do
-    cmd[$j]=${cmd[$j]}" \"$bcid\"'"
+  cmd[$j]=${cmd[$j]}" \"${bcid}\"'"
 	j=$((j+1))
 done
 
@@ -30585,6 +30586,8 @@ final_cmd="convert -font helvetica -fill black -pointsize 75"
 for i in $(seq 0 "$((j-1))"); do
 	final_cmd="${final_cmd} ${cmd[$i]}"
 done
-final_cmd="${final_cmd} $template_file $output_file"
+final_cmd="${final_cmd} ${template_file} ${output_file}"
 
-eval "$final_cmd"
+eval "${final_cmd}"
+
+rm "${template_file}"
